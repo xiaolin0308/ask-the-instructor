@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遇事不决问教员 · 写给此刻的你</title>
+<style>
+  :root{
+    --paper:#f5f1e8;
+    --paper-2:#fffdf7;
+    --ink:#26231f;
+    --ink-soft:#5a544b;
+    --ink-faint:#958c7e;
+    --line:#e2dac9;
+    --seal:#9e3b2c;
+    --seal-soft:#b8695c;
+    --sage:#6f7d6c;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(900px 600px at 12% -5%, rgba(255,255,255,.85), transparent 60%),
+      radial-gradient(700px 500px at 92% 12%, rgba(224,211,186,.35), transparent 65%),
+      radial-gradient(600px 600px at 50% 100%, rgba(214,203,181,.28), transparent 60%),
+      var(--paper);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.16;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:64px 24px 72px;}
+
+  /* ---------- header ---------- */
+  header{text-align:center;margin-bottom:40px;}
+  .seal{
+    width:46px;height:46px;margin:0 auto 22px;background:var(--seal);
+    color:#fff8ee;display:flex;align-items:center;justify-content:center;
+    font-family:"Songti SC","STSong",SimSun,serif;font-size:26px;line-height:1;
+    border-radius:3px;transform:rotate(-4deg);
+    box-shadow:0 6px 18px rgba(158,59,44,.22);
+  }
+  h1{
+    margin:0;font-family:"Songti SC","STSong",SimSun,serif;
+    font-size:40px;letter-spacing:.16em;font-weight:600;text-indent:.16em;
+  }
+  .sub{margin:14px 0 0;color:var(--ink-faint);font-size:14px;letter-spacing:.08em;}
+  .companion{margin-top:10px;font-size:12px;color:var(--sage);letter-spacing:.06em;}
+
+  /* ---------- cards ---------- */
+  .card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:5px;
+    box-shadow:0 14px 40px rgba(70,58,42,.06);
+  }
+  .composer{padding:30px 32px 26px;}
+  .field-label{font-size:12px;color:var(--seal);letter-spacing:.22em;margin-bottom:14px;}
+  textarea{
+    width:100%;min-height:132px;border:0;outline:0;resize:vertical;
+    background:transparent;color:var(--ink);
+    font-family:"Songti SC","STSong",SimSun,serif;
+    font-size:18px;line-height:1.9;
+  }
+  textarea::placeholder{color:#bdb4a4;}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px;}
+  .example{
+    font-size:12px;color:var(--ink-faint);border:1px dashed var(--line);
+    border-radius:999px;padding:5px 12px;cursor:pointer;background:transparent;
+    transition:all .2s;font-family:inherit;
+  }
+  .example:hover{color:var(--seal);border-color:var(--seal-soft);background:rgba(158,59,44,.04);}
+  .divider{height:1px;background:var(--line);margin:0 0 20px;}
+  .moods-label{font-size:12px;color:var(--ink-faint);margin-bottom:11px;letter-spacing:.05em;}
+  .moods{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    font-size:13px;padding:6px 14px;border-radius:999px;cursor:pointer;
+    border:1px solid #dcd4c4;background:transparent;color:var(--ink-soft);
+    transition:all .18s;font-family:inherit;
+  }
+  .chip:hover{border-color:var(--seal-soft);color:var(--seal);}
+  .chip.on{background:var(--seal);border-color:var(--seal);color:#fff8ee;}
+  .actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:26px;}
+  .count{font-size:12px;color:#bdb4a4;}
+  button.primary{
+    background:var(--ink);color:#fff8ee;border:0;border-radius:3px;
+    padding:13px 30px;font-size:14px;letter-spacing:.14em;cursor:pointer;
+    transition:transform .18s, background .18s;font-family:inherit;
+  }
+  button.primary:hover{background:#3b3731;transform:translateY(-1px);}
+  button.primary:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+  .hint{margin-top:12px;font-size:12px;color:var(--seal);min-height:16px;}
+
+  /* ---------- result ---------- */
+  .result{margin-top:34px;}
+  .result[hidden]{display:none;}
+  .result-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;}
+  .result-title{font-family:"Songti SC","STSong",SimSun,serif;font-size:20px;letter-spacing:.1em;}
+  .result-sub{font-size:12px;color:var(--ink-faint);}
+  .quote-card{
+    position:relative;padding:34px 36px 28px;margin-bottom:16px;overflow:hidden;
+    border-left:3px solid var(--seal);
+  }
+  .quote-card::before{
+    content:"「";position:absolute;right:26px;top:2px;
+    font-family:"Songti SC",serif;font-size:120px;line-height:1;
+    color:rgba(158,59,44,.07);pointer-events:none;
+  }
+  .qmark{color:var(--seal);font-family:"Songti SC",serif;font-size:44px;line-height:.6;opacity:.45;}
+  .quote-text{
+    margin:12px 0 18px;font-family:"Songti SC","STSong",SimSun,serif;
+    font-size:24px;line-height:1.85;letter-spacing:.03em;color:#1f1c18;
+  }
+  .quote-text.long{font-size:20px;}
+  .source{font-size:12px;color:var(--ink-faint);letter-spacing:.05em;display:flex;align-items:center;gap:9px;}
+  .source::before{content:"";width:5px;height:5px;background:var(--seal);display:inline-block;transform:rotate(45deg);}
+  .note-block{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);}
+  .block-label{font-size:11px;color:var(--seal);letter-spacing:.24em;margin-bottom:10px;}
+  .note-text{font-size:15px;line-height:1.95;color:var(--ink-soft);margin:0;}
+  .why{
+    margin-top:20px;background:#f6f1e5;border-radius:3px;
+    padding:16px 18px;font-size:14px;line-height:1.85;color:#4b453c;
+  }
+  .why b{color:var(--seal);font-weight:600;}
+  .action-line{margin-top:14px;font-size:13px;color:var(--sage);}
+  .action-line::before{content:"→ ";color:var(--seal);}
+  .copy{
+    position:absolute;right:24px;bottom:22px;background:transparent;border:0;
+    color:#b5ac9c;font-size:12px;cursor:pointer;font-family:inherit;padding:4px;
+  }
+  .copy:hover{color:var(--seal);}
+  .more{margin-top:26px;}
+  .more-title{font-size:12px;color:var(--ink-faint);letter-spacing:.16em;margin-bottom:12px;}
+  .mini{
+    padding:18px 22px;margin-bottom:10px;border:1px solid var(--line);
+    border-radius:4px;background:rgba(255,253,247,.7);
+  }
+  .mini-text{font-family:"Songti SC","STSong",SimSun,serif;font-size:17px;line-height:1.75;color:#2b2722;}
+  .mini-note{margin-top:9px;font-size:13px;line-height:1.8;color:var(--ink-soft);}
+  .mini-source{margin-top:8px;font-size:11px;color:var(--ink-faint);}
+  .result-actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;}
+  .ghost{
+    background:transparent;border:1px solid var(--line);border-radius:3px;
+    padding:10px 20px;font-size:13px;color:var(--ink-soft);cursor:pointer;
+    font-family:inherit;transition:all .18s;
+  }
+  .ghost:hover{border-color:var(--seal-soft);color:var(--seal);}
+
+  footer{
+    margin-top:54px;padding-top:24px;border-top:1px solid var(--line);
+    text-align:center;font-size:12px;line-height:2;color:#a79e8e;
+  }
+  footer strong{color:var(--ink-soft);font-weight:500;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .rise{animation:rise .5s ease both;}
+  @media(max-width:600px){
+    .wrap{padding:44px 16px 56px;}
+    h1{font-size:32px;}
+    .composer{padding:24px 20px 22px;}
+    .quote-card{padding:26px 22px 24px;}
+    .quote-text{font-size:21px;}
+    .quote-text.long{font-size:18px;}
+    .actions{flex-direction:column;align-items:stretch;}
+    button.primary{width:100%;}
+    .count{text-align:center;}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="seal">问</div>
+    <h1>遇事不决问教员</h1>
+    <p class="sub">写下此刻的困惑或感悟，让文字回应你</p>
+    <p class="companion" id="companionLine">这里没有标准答案，只有一句恰好合适的话</p>
+  </header>
+
+  <section class="card composer">
+    <div class="field-label">此 刻 · 我 想 说</div>
+    <textarea id="input" maxlength="600" placeholder="此刻，你在为什么事为难？又或者，只是想说点什么……"></textarea>
+    <div class="examples" id="examples"></div>
+    <div class="divider"></div>
+    <div class="moods-label">也可以只选一个此刻的状态：</div>
+    <div class="moods" id="moods"></div>
+    <div class="actions">
+      <span class="count" id="count">0 / 600</span>
+      <button class="primary" id="submit">寻 一 句 回 应</button>
+    </div>
+    <div class="hint" id="hint"></div>
+  </section>
+
+  <section class="result" id="result" hidden>
+    <div class="result-head">
+      <div class="result-title">致 此 刻 的 你</div>
+      <div class="result-sub" id="resultSub"></div>
+    </div>
+    <div id="primaryBox"></div>
+    <div class="more" id="moreBox"></div>
+    <div class="result-actions">
+      <button class="ghost" id="again">换 一 组</button>
+      <button class="ghost" id="reset">重 新 写</button>
+    </div>
+  </section>
+
+  <footer>
+    <div><strong>关于这里：</strong>你写下的内容只留在这台设备的浏览器里，不会被发送出去。</div>
+    <div>这里提供的是文字的陪伴，不能替代专业的心理支持。若情绪持续困扰你，请考虑寻求专业帮助。</div>
+    <div>引文均出自《毛泽东选集》及相关讲话，注释为编者所写，如有出入请以原著为准。</div>
+  </footer>
+</main>
+
+<script>
+const MOODS = ["焦虑","迷茫","疲惫","受挫","自我怀疑","选择困难","拖延","人际困扰","觉得孤单","想放弃","说不清"];
+
+const EXAMPLES = [
+  "事情太多，每天都很心慌，做不完",
+  "努力了很久，好像一点进展都没有",
+  "我不知道自己到底想要什么",
+  "总觉得自己不如别人，抬不起头",
+  "太累了，真的想停下来歇一歇"
+];
+
+const QUOTES = [
+  {
+    id:"spark",
+    text:"星星之火，可以燎原。",
+    source:"《星星之火，可以燎原》· 1930年",
+    moods:["迷茫","想放弃","自我怀疑","说不清"],
+    keys:["开始","起步","微小","太小","太慢","看不到","没起色","积累","一点点","弱小","苗头","坚持"],
+    note:`1930年，队伍正处低潮，有人问「红旗到底能打多久」。这篇文章的回答是：判断一股力量，不看它此刻的大小，看它是否扎根现实、是否还在生长。微弱的火光只要没有灭，就有燎原的可能。你现在的「小」，不是终局的「小」。`,
+    bridge:`你不必此刻就证明自己很大。先守住那点火光，让它别灭。`,
+    action:`今天只做一件能让火苗不灭的小事。`
+  },
+  {
+    id:"ship",
+    text:"它是站在海岸遥望海中已经看得见桅杆尖头了的一只航船，它是立于高山之巅远看东方已见光芒四射喷薄欲出的一轮朝日，它是躁动于母腹中的快要成熟了的一个婴儿。",
+    source:"《星星之火，可以燎原》· 1930年",
+    moods:["迷茫","焦虑","说不清"],
+    keys:["未来","希望","黎明","等待","快了","看不见","遥远","期待","转机","前路","还没来"],
+    note:`这是那篇文章著名的结尾，用航船、朝日、婴儿三个意象，形容「快要到来却尚未到来」的事物。它不是空喊乐观，而是基于对趋势的判断，所以才写得那样具体。当结果还没显形时，可以先相信那个正在靠近的过程。`,
+    bridge:`你感觉它还没来，但它也许已经在路上了。`,
+    action:`写下你期待的那件事，最先出现的一个迹象会是什么。`
+  },
+  {
+    id:"yugong",
+    text:"下定决心，不怕牺牲，排除万难，去争取胜利。",
+    source:"《愚公移山》· 1945年",
+    moods:["疲惫","受挫","想放弃"],
+    keys:["困难","太难","扛不住","撑","咬牙","坚持","压力","累","拼","万难"],
+    note:`这是七大的闭幕词，结尾讲了愚公移山。它并不否认「万难」是真实的——承认难，才有「排除」这件事可做。这句话的力量不在「不怕」，而在「排除」这个动词：它把注意力从感受转向动作。当然，它并不要求你透支自己；真正的排除，也包括聪明地绕开。`,
+    bridge:`难是真的，但你不是只能站在难前面发呆。`,
+    action:`挑一个「难」，只写出下一步动作。`
+  },
+  {
+    id:"bridge",
+    text:"我们不但要提出任务，而且要解决完成任务的方法问题。……我们的任务是过河，但是没有桥或没有船就不能过。不解决桥或船的问题，过河就是一句空话。",
+    source:"《关心群众生活，注意工作方法》· 1934年",
+    moods:["焦虑","拖延","选择困难"],
+    keys:["怎么办","方法","不知道","计划","任务","执行","做不完","卡住","无从下手","效率","拖延"],
+    note:`「过河」与「桥或船」的比喻，几乎是为现代焦虑写的。很多压力不是因为河太宽，而是因为我们只盯着河，没去找桥。把「我要完成」换成「我用什么方法完成」，无力感就会松动。`,
+    bridge:`你不是过不了河，你只是还没找到船。`,
+    action:`给眼下最焦虑的那件事，写出两种不同的过河方法。`
+  },
+  {
+    id:"investigate",
+    text:"没有调查，没有发言权。",
+    source:"《反对本本主义》· 1930年",
+    moods:["自我怀疑","选择困难","迷茫"],
+    keys:["纠结","决定","判断","了解","瞎猜","别人怎么看","信息","事实","调研","不敢下结论"],
+    note:`原本是反对脱离实际的教条主义。放到个人处境里：当你反复怀疑自己、又迟迟不敢下判断时，往往是因为掌握的真实情况还不够。先去问、去看、去试，再下结论——包括对自己的结论。`,
+    bridge:`先别急着给自己定罪，去把事情看清楚。`,
+    action:`找一个你「以为」的事实，去核实它。`
+  },
+  {
+    id:"practice",
+    text:"真理只有一个，而究竟谁发现了真理，不依靠主观的夸张，而依靠客观的实践。",
+    source:"《实践论》· 1937年",
+    moods:["自我怀疑","焦虑","拖延"],
+    keys:["证明","行不行","能不能","空想","想太多","行动","试试","内耗","结果","做不做"],
+    note:`《实践论》说的是：认识从实践中来，又要回到实践中去检验。你不需要先在心里彻底确信「自己可以」再动手。先做一小步，让实践给你答案——那比在脑内演练一百遍都可靠。`,
+    bridge:`想不清楚的事，做一点点就清楚了。`,
+    action:`用十分钟做一个最小版本的尝试。`
+  },
+  {
+    id:"feel",
+    text:"感觉到了的东西，我们不能立刻理解它，只有理解了的东西才更深刻地感觉它。",
+    source:"《实践论》· 1937年",
+    moods:["说不清","焦虑","觉得孤单"],
+    keys:["情绪","感受","心里","难受","说不出来","混乱","写下来","梳理","反思","感悟","烦"],
+    note:`这句话恰好解释了「写下来为什么有用」。情绪是被感觉到的，往往混沌又压人；写成文字、加以梳理，就变成了被理解的东西。而理解之后，感受反而更清晰、也更可控——你不再是被情绪推着走，而是能看着它。`,
+    bridge:`你现在写下的这些字，已经在帮你把它看清楚了。`,
+    action:`给这段情绪起一个名字。`
+  },
+  {
+    id:"inside",
+    text:"外因是变化的条件，内因是变化的根据，外因通过内因而起作用。",
+    source:"《矛盾论》· 1937年",
+    moods:["受挫","人际困扰","疲惫"],
+    keys:["环境","别人","不公平","命运","抱怨","改变","无力","怪","条件","运气","关系"],
+    note:`这句话承认外部环境是真实的「条件」，不劝你假装一切都没关系；但它把「根据」放在自身。这不是让你责怪自己，而是提醒你：在不能换条件的时候，你仍然有一个可以着力的地方。`,
+    bridge:`环境不全是你能选的，但回应方式有一部分是。`,
+    action:`列出一件「我能决定的小事」。`
+  },
+  {
+    id:"different",
+    text:"不同质的矛盾，只有用不同质的方法才能解决。",
+    source:"《矛盾论》· 1937年",
+    moods:["焦虑","说不清","选择困难"],
+    keys:["复杂","混在一起","一团乱","方法不对","卡住","解决不了","头绪","搞不定"],
+    note:`当你把工作、关系、身体、钱的事揉成「我整个人生都失败了」，痛苦会被成倍放大。它们其实是不同性质的问题，需要不同的方法。先分开，再逐个处理——所谓「一团乱」，往往只是几件小事叠在了一起。`,
+    bridge:`你不是被一个大问题压垮，是被几件不同性质的事挤在了一起。`,
+    action:`把困扰你的事分成两类，分别写一句话。`
+  },
+  {
+    id:"main",
+    text:"研究任何过程，如果是存在着两个以上矛盾的复杂过程的话，就要用全力找出它的主要矛盾。",
+    source:"《矛盾论》· 1937年",
+    moods:["焦虑","疲惫","选择困难"],
+    keys:["千头万绪","优先级","忙乱","重要","先做","太多","顾不过来","精力","乱"],
+    note:`压力常常来自一个错觉：所有事都同样紧急、同样重要。抓主要矛盾，就是允许自己暂时放下一些东西——不是放弃，是排序。你不需要同时赢下所有战场。`,
+    bridge:`今天只要抓住一件最主要的，其余的可以暂时靠边。`,
+    action:`圈出今天最重要的一件事。`
+  },
+  {
+    id:"bright",
+    text:"总之，前途是光明的，道路是曲折的。",
+    source:"《关于重庆谈判》· 1945年",
+    moods:["迷茫","想放弃","焦虑","受挫"],
+    keys:["未来","曲折","绕弯","退步","反复","希望","看不到头","低谷","漫长","坚持"],
+    note:`原话出自《关于重庆谈判》，上下文值得一看：毛先说「我们宁肯把困难想得更多一些」，承认困难是事实，然后才说出这一句。它不是廉价的安慰，而是「认清难，仍不否定前路」。`,
+    bridge:`走弯路不等于走错路，只说明路本来就不直。`,
+    action:`写下最近一个「看似退步、其实在绕弯」的例子。`
+  },
+  {
+    id:"courage",
+    text:"我们的同志在困难的时候，要看到成绩，要看到光明，要提高我们的勇气。",
+    source:"《为人民服务》· 1944年",
+    moods:["疲惫","受挫","自我怀疑","想放弃"],
+    keys:["鼓励","打气","泄气","成绩","做到","成果","勇气","撑不住","否定自己"],
+    note:`这是1944年张思德追悼会上的讲话。注意它的顺序：先看「成绩」，再看「光明」，然后才谈「勇气」。勇气不是凭空鼓起来的，它建立在已经做成过的事情之上——哪怕很小。`,
+    bridge:`你不是一无是处，你只是太久没数过自己做到的事。`,
+    action:`写下三件最近你做成的小事。`
+  },
+  {
+    id:"strategy",
+    text:"政策和策略是党的生命。",
+    source:"《关于情况的通报》· 1948年",
+    moods:["受挫","选择困难","疲惫"],
+    keys:["方向","策略","努力没用","蛮干","白费","规划","路线","选择"],
+    note:`光用力不够，方向和策略本身决定成败。如果你已经很努力却迟迟没有进展，该停下来检查的是「策略」，而不是继续加大力气透支自己。停下来不是认输，是校正。`,
+    bridge:`你已经很用力了，也许现在该换的是方向，不是力气。`,
+    action:`问自己：如果只能换一个做法，我会换哪个？`
+  },
+  {
+    id:"prepare",
+    text:"不打无准备之仗，不打无把握之仗。",
+    source:"《解放战争第二年的战略方针》· 1947年",
+    moods:["焦虑","选择困难"],
+    keys:["准备","仓促","冒险","没把握","贸然","着急","匆忙","不确定"],
+    note:`这不是让你永远等到万无一失才出手——那样只会一直等下去。它的意思是：在没有把握的时候，先把能准备的准备好。行动的底气，来自你手里已有的那点准备。`,
+    bridge:`你不必完全不害怕，只要先备好能备的那一部分。`,
+    action:`列出三件能提前准备的小事。`
+  },
+  {
+    id:"focus",
+    text:"集中优势兵力，各个歼灭敌人。",
+    source:"《集中优势兵力，各个歼灭敌人》· 1946年",
+    moods:["疲惫","焦虑","拖延"],
+    keys:["分心","精力","多任务","同时","专注","效率","忙","分散","顾此失彼"],
+    note:`这是军事上的原则，用在个人身上很朴素：与其四面出击、处处薄弱，不如把有限的精力集中到一点，先拿下一件。你不是不够努力，你只是把力气摊得太薄了。`,
+    bridge:`你不需要样样兼顾，先集中拿下一件就够了。`,
+    action:`今天只给一件事你的完整注意力。`
+  },
+  {
+    id:"preserve",
+    text:"战争的目的不是别的，就是「保存自己，消灭敌人」。",
+    source:"《论持久战》· 1938年",
+    moods:["疲惫","想放弃","焦虑"],
+    keys:["休息","透支","撑","体力","消耗","身体","停下","喘气","累"],
+    note:`这句话给了「保存自己」一个正当位置——它本来就是战略的一部分，不是懦弱，也不是偷懒。如果只顾消灭困难、不顾保存自己，战线迟早会断。休息、退一步、降低强度，都是为了让这件事还能继续下去。`,
+    bridge:`允许自己歇一会儿，这不是掉队，是在保住战线。`,
+    action:`今天给自己留出一段真正不处理问题的时间。`
+  },
+  {
+    id:"people",
+    text:"武器是战争的重要的因素，但不是决定的因素，决定的因素是人不是物。",
+    source:"《论持久战》· 1938年",
+    moods:["人际困扰","自我怀疑","受挫"],
+    keys:["条件","资源","比较","别人有","设备","钱","背景","自卑","不如人","差距"],
+    note:`条件当然重要，原文没有回避这一点；但它不是决定性的。在资源不如人的时候，判断、意志和组织方式仍然是变量。别把「我手里的牌不好」直接翻译成「我输了」。`,
+    bridge:`牌不好是真的，但牌怎么打还没定。`,
+    action:`想一个「用现有条件也能做」的改进。`
+  },
+  {
+    id:"criticism",
+    text:"因为我们是为人民服务的，所以，我们如果有缺点，就不怕别人批评指出。",
+    source:"《为人民服务》· 1944年",
+    moods:["人际困扰","自我怀疑","受挫"],
+    keys:["批评","被说","面子","认错","敏感","指责","评价","自尊","玻璃心"],
+    note:`这句话把「对错」和「自我」分开了：被指出缺点，不等于被否定整个人。原话后面还说「只要你说得对，我们就改正」——接受批评是有条件的，前提是说得对。所以你也不必全盘收下每一句指责。`,
+    bridge:`别人指出一件事做得不好，不等于你这个人不好。`,
+    action:`把那句让你难受的话，拆成「事实」和「评价」两部分。`
+  },
+  {
+    id:"paperTiger",
+    text:"一切反动派都是纸老虎。看起来，反动派的样子是可怕的，但是实际上并没有什么了不起的力量。",
+    source:"《和美国记者安娜·路易斯·斯特朗的谈话》· 1946年",
+    moods:["焦虑","迷茫","受挫"],
+    keys:["恐惧","害怕","吓人","看起来","强大","压过来","可怕","虚张声势","担心"],
+    note:`这里的洞察是「外表与实际力量之间的落差」：让你害怕的东西，往往被恐惧放大了。它不否认威胁存在，只是提醒你——先把「看起来可怕」和「真的有那么可怕」分开看，你会发现自己比想象中更有余地。`,
+    bridge:`你怕的那个东西，可能没有它看起来那么大。`,
+    action:`写下你怕的具体是什么，再写它最坏能坏到哪一步。`
+  },
+  {
+    id:"noShortcut",
+    text:"世界上没有直路，要准备走曲折的路，不要贪便宜。",
+    source:"《关于重庆谈判》· 1945年",
+    moods:["迷茫","疲惫","焦虑"],
+    keys:["捷径","绕路","慢慢","反复","耐心","走弯路","不顺利","着急","速成"],
+    note:`这句话接着「困难是事实」往下说：不要指望哪天早上问题自己消失。承认没有直路，反而能少一点「为什么还不成」的自我折磨。走曲折的路不是失败，是默认设置。`,
+    bridge:`你以为只有你在绕路，其实路本来就是这样。`,
+    action:`把「什么时候能好」换成「今天走哪一小段」。`
+  },
+  {
+    id:"remake",
+    text:"改造客观世界，也改造自己的主观世界。",
+    source:"《实践论》· 1937年",
+    moods:["说不清","自我怀疑","疲惫"],
+    keys:["改变自己","成长","反思","认知","想法","心态","转变","悟"],
+    note:`《实践论》的结尾讲的是一件双向的事：你在改变处境的同时，处境也在改变你。所以不必把「我怎么还没变好」当成失败——变化往往先发生在你看事情的方式上，然后才发生在事情本身。`,
+    bridge:`你已经在变了，只是变化先发生在里面。`,
+    action:`写下一句「我现在和三个月前看法不一样」的事。`
+  }
+];
+
+const UNIVERSAL = ["bright","courage","preserve","spark","feel","noShortcut"];
+
+const $ = id => document.getElementById(id);
+let selectedMoods = new Set();
+let lastResult = null;
+let rotation = 0;
+let visitCount = Number(localStorage.getItem("xh_visits") || 0);
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function bigrams(s){
+  const t = String(s).replace(/[\s，。！？、；：,.!?;:'"「」《》]/g,"");
+  const out = new Set();
+  for(let i=0;i<t.length-1;i++) out.add(t.slice(i,i+2));
+  return out;
+}
+function updateCompanionLine(){
+  $("companionLine").textContent = visitCount > 1
+    ? `这是第 ${visitCount} 次，在这里停一停。`
+    : "这里没有标准答案，只有一句恰好合适的话";
+}
+
+// build chips & examples
+$("moods").innerHTML = MOODS.map(m => `<button type="button" class="chip" data-m="${m}">${m}</button>`).join("");
+$("examples").innerHTML = EXAMPLES.map(e => `<button type="button" class="example" data-e="${esc(e)}">${esc(e)}</button>`).join("");
+
+$("moods").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if(!b) return;
+  const m = b.dataset.m;
+  if(selectedMoods.has(m)){ selectedMoods.delete(m); b.classList.remove("on"); }
+  else { selectedMoods.add(m); b.classList.add("on"); }
+  $("hint").textContent = "";
+});
+$("examples").addEventListener("click", e => {
+  const b = e.target.closest(".example"); if(!b) return;
+  $("input").value = b.dataset.e;
+  $("input").dispatchEvent(new Event("input"));
+  $("input").focus();
+});
+$("input").addEventListener("input", () => {
+  $("count").textContent = `${$("input").value.length} / 600`;
+  $("hint").textContent = "";
+});
+
+function rank(text, moods){
+  const hay = text + " " + moods.join(" ");
+  const inGrams = bigrams(hay);
+  const scored = QUOTES.map(q => {
+    let s = 0; const hits = [];
+    moods.forEach(m => { if(q.moods.includes(m)){ s += 5; hits.push(m); } });
+    q.keys.forEach(k => {
+      if(hay.includes(k)){ s += 3; hits.push(k); }
+      else {
+        let ov = 0;
+        bigrams(k).forEach(g => { if(inGrams.has(g)) ov++; });
+        s += Math.min(ov * 0.28, 1.2);
+      }
+    });
+    return { q, s, hits:[...new Set(hits)] };
+  });
+  scored.sort((a,b) => b.s - a.s);
+  return scored;
+}
+
+function pickSet(text, moods){
+  const scored = rank(text, moods);
+  const top = scored[0];
+  const chosen = [top];
+  const usedSources = new Set([top.q.source]);
+  for(let i=1;i<scored.length && chosen.length<3;i++){
+    if(scored[i].s < 1.2) break;
+    if(usedSources.has(scored[i].q.source)) continue;
+    chosen.push(scored[i]); usedSources.add(scored[i].q.source);
+  }
+  if(chosen.length < 3){
+    const pool = UNIVERSAL.map(id => QUOTES.find(q => q.id === id));
+    for(let k=0; chosen.length<3 && k<pool.length; k++){
+      const q = pool[(rotation + k) % pool.length];
+      if(!chosen.some(c => c.q.id === q.id)) chosen.push({q, s:0, hits:[]});
+    }
+    rotation = (rotation + 1) % UNIVERSAL.length;
+  }
+  return chosen;
+}
+
+function personalLine(item, text){
+  const hit = item.hits.find(h => h.length <= 8 && text.includes(h)) || selectedMoods.values().next().value;
+  return hit
+    ? `你说到了「${esc(hit)}」。${esc(item.q.bridge)}`
+    : esc(item.q.bridge);
+}
+
+function render(){
+  const text = $("input").value.trim();
+  const moods = [...selectedMoods];
+  if(!text && moods.length === 0){
+    $("hint").textContent = "先写点什么，或者选一个此刻的状态吧。";
+    $("input").focus();
+    return;
+  }
+  visitCount += 1;
+  localStorage.setItem("xh_visits", String(visitCount));
+  updateCompanionLine();
+
+  const set = pickSet(text, moods);
+  lastResult = set;
+  const main = set[0];
+
+  $("primaryBox").innerHTML = `
+    <div class="card quote-card rise">
+      <div class="qmark">“</div>
+      <div class="quote-text ${main.q.text.length > 60 ? "long" : ""}">${esc(main.q.text)}</div>
+      <div class="source">${esc(main.q.source)}</div>
+      <div class="note-block">
+        <div class="block-label">注 释</div>
+        <p class="note-text">${esc(main.q.note)}</p>
+      </div>
+      <div class="why">${personalLine(main, text)}</div>
+      <div class="action-line">${esc(main.q.action)}</div>
+      <button class="copy" data-copy="${esc(main.q.text + " —— " + main.q.source)}">复制这句</button>
+    </div>`;
+
+  $("moreBox").innerHTML = `
+    <div class="more-title">另 外 两 句 ， 也 许 更 贴 近</div>
+    ${set.slice(1).map(item => `
+      <div class="mini">
+        <div class="mini-text">${esc(item.q.text)}</div>
+        <div class="mini-note">${esc(item.q.note)}</div>
+        <div class="mini-source">${esc(item.q.source)}</div>
+        <button class="copy" data-copy="${esc(item.q.text + " —— " + item.q.source)}">复制</button>
+      </div>`).join("")}`;
+
+  $("resultSub").textContent = set[0].s < 1.2 ? "这一句，送给说不清的此刻" : "为你挑了三句";
+  $("result").hidden = false;
+  $("result").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+$("submit").addEventListener("click", render);
+$("input").addEventListener("keydown", e => {
+  if((e.ctrlKey || e.metaKey) && e.key === "Enter") render();
+});
+$("again").addEventListener("click", () => {
+  if(!lastResult) return;
+  rotation = (rotation + 1) % UNIVERSAL.length;
+  render();
+});
+$("reset").addEventListener("click", () => {
+  $("result").hidden = true;
+  $("input").value = "";
+  $("count").textContent = "0 / 600";
+  selectedMoods.forEach(m => {
+    const b = document.querySelector(`.chip[data-m="${m}"]`);
+    if(b) b.classList.remove("on");
+  });
+  selectedMoods.clear();
+  $("hint").textContent = "";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+$("result").addEventListener("click", async e => {
+  const b = e.target.closest(".copy"); if(!b) return;
+  const txt = b.dataset.copy;
+  try { await navigator.clipboard.writeText(txt); }
+  catch {
+    const ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+  b.textContent = "已复制";
+  setTimeout(() => { b.textContent = b.classList.contains("copy") && b.closest(".mini") ? "复制" : "复制这句"; }, 1600);
+});
+
+updateCompanionLine();
+</script>
+</body>
+</html>
